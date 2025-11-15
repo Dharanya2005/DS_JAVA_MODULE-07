@@ -15,10 +15,13 @@ To design and implement a class NestedIterator that flattens a nested list of in
 
 ## Program:
 
-Developed by: Dharanya N
-RegisterNumber:  212223230044
-
 ```
+/*
+program that detects a cycle in a linked list and returns the node where the cycle begins.
+If there is no cycle, the program should return null without modifying the linked list.
+Developed by: Starbiya S
+RegisterNumber: 212223040208
+*/
 import java.util.*;
 
 interface NestedInteger {
