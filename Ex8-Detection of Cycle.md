@@ -1,101 +1,124 @@
 # Ex8 Detection of Cycle and Finding the Starting Node in a Linked List
-## DATE:15-11-25
+## DATE: 29/08/25
 ## AIM:
 To write a program that detects a cycle in a linked list and returns the node where the cycle begins.
 If there is no cycle, the program should return null without modifying the linked list.
 ## Algorithm
-1.Start slow = head and fast = head.
-
-
-2.Move slow by 1 step and fast by 2 steps until they meet or fast becomes null.
-
-
-3.If fast becomes null, return null (no cycle).
-
-
-4.Move slow to head, keep fast at meeting point.
-
-
-5.Move both one step at a time until they meet — this node is the cycle start.
-
+```
+1. Start the program.
+2. Read input & build linked list.
+3. If pos >= 0, link last node to pos node.
+4. Use Floyd’s algorithm to detect cycle.
+5. If no cycle → print "no cycle".
+6. If cycle detected:
+         Move second pointer from head until it meets slow pointer.
+         That meeting point is cycle start.
+7. Find index of that node in nodeList. 
+8. Print "tail connects to node index X".
+9. Stop the program.
+```
 ## Program:
 ```
 /*
 program that detects a cycle in a linked list and returns the node where the cycle begins.
 If there is no cycle, the program should return null without modifying the linked list.
-Developed by: Dharanya N
-RegisterNumber: 212223230044
+Developed by: N Preethika
+RegisterNumber:  212223040130
 */
-class DetectCycle {
 
-    // Node structure
-    static class Node {
-        int data;
-        Node next;
+import java.util.*;
 
-        Node(int data) {
-            this.data = data;
-            this.next = null;
+public class Solution {
+
+    static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+            next = null;
         }
     }
 
-    // Function to detect cycle and return the starting node of the cycle
-    static Node detectCycle(Node head) {
-        if (head == null || head.next == null) 
-            return null;
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null) return null;
 
-        Node slow = head;
-        Node fast = head;
+        ListNode slow = head, fast = head;
 
-        // Step 1: Detect if a cycle exists
         while (fast != null && fast.next != null) {
-            slow = slow.next;          // slow moves 1 step
-            fast = fast.next.next;     // fast moves 2 steps
+            slow = slow.next;
+            fast = fast.next.next;
 
-            if (slow == fast) {        // cycle detected
-                break;
+            if (slow == fast) {
+               
+                ListNode entry = head;
+                while (entry != slow) {
+                    entry = entry.next;
+                    slow = slow.next;
+                }
+                return entry;
             }
         }
 
-        // If no cycle
-        if (fast == null || fast.next == null)
-            return null;
-
-        // Step 2: Find the node where the cycle begins
-        slow = head;
-        while (slow != fast) {
-            slow = slow.next;
-            fast = fast.next;
-        }
-
-        return slow;   // this is the start of the cycle
+        return null;
     }
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Solution sol = new Solution();
 
-        // Create linked list: 1 -> 2 -> 3 -> 4 -> 5
-        Node head = new Node(1);
-        head.next = new Node(2);
-        head.next.next = new Node(3);
-        head.next.next.next = new Node(4);
-        head.next.next.next.next = new Node(5);
+        String headInput = sc.nextLine().trim().replaceAll("\\[|\\]", "");
+        
+        int pos = sc.nextInt();
 
-        // Creating a cycle: node 5 points to node 3
-        head.next.next.next.next.next = head.next.next;
+        if (headInput.isEmpty()) {
+            System.out.println("no cylce");
+            return;
+        }
 
-        Node cycleStart = detectCycle(head);
+        String[] parts = headInput.split(",");
+        int[] values = Arrays.stream(parts).mapToInt(Integer::parseInt).toArray();
 
-        if (cycleStart != null)
-            System.out.println("Cycle starts at node: " + cycleStart.data);
-        else
-            System.out.println("No cycle detected.");
+        ListNode head = new ListNode(values[0]);
+        ListNode current = head;
+        List<ListNode> nodeList = new ArrayList<>();
+        nodeList.add(head);
+
+        for (int i = 1; i < values.length; i++) {
+            ListNode newNode = new ListNode(values[i]);
+            current.next = newNode;
+            current = newNode;
+            nodeList.add(newNode);
+        }
+
+      
+        if (pos >= 0 && pos < nodeList.size()) {
+            current.next = nodeList.get(pos);
+        }
+
+
+        ListNode cycleStart = sol.detectCycle(head);
+
+        if (cycleStart != null) {
+            int index = 0;
+            for (ListNode node : nodeList) {
+                if (node == cycleStart) {
+                    System.out.println("tail connects to node index " + index);
+                    return;
+                }
+                index++;
+            }
+        } else {
+            System.out.println("no cycle");
+        }
     }
 }
 
 ```
 
 ## Output:
-<img width="374" height="129" alt="image" src="https://github.com/user-attachments/assets/6d97745d-dbe5-4aa5-9f78-553b78468aaa" />
+
+<img width="889" height="292" alt="image" src="https://github.com/user-attachments/assets/a53af8a9-f370-4bea-b8a2-baa1b53c1bdf" />
 
 ## Result:
 The program successfully detects whether a cycle exists in the linked list.
